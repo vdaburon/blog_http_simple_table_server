@@ -16,12 +16,12 @@ Ce plugin reprend des fonctionnalités de l’application dédiée pour Tomcat p
 # Gérer le jeu de données avec Http Simple Table Server (STS)
 ## Ajout d’une gestion centralisée du jeu de données
 
-Les tests de performance avec JMeter peuvent se faire avec plusieurs injecteurs JMeter (sans interface, sur une machine distante) et un contrôleur JMeter (avec interface utilisateur, sur la machine locale).
+Les tests de performance avec JMeter peuvent se faire avec plusieurs injecteurs JMeter ou générateurs de charge (sans interface, sur une machine distante) et un contrôleur JMeter (avec interface utilisateur ou en ligne de commande sur la machine locale).
 
-Les scripts JMeter sont envoyés par le protocole RMI vers les injecteurs.<br/>
+Le script JMeter et les properties sont envoyés par le protocole RMI vers les injecteurs.<br/>
 Les résultats des appels sont retournés périodiquement au contrôleur JMeter.
 
-Cependant le jeu de données et les fichiers csv ne sont pas transférés du contrôleur vers les injecteurs.<br/>
+Cependant le jeu de données, les fichiers csv ne sont pas transférés du contrôleur vers les injecteurs.<br/>
 
 ![Architecture JMeter multi-injecteurs et STS](../../doc/images/FR_STS_JMeter_archi_distribuee.png)
 
@@ -42,8 +42,10 @@ Le STS est très utile dans un test avec plusieurs injecteurs JMeter mais il est
 
 ## Quelques possibilités d’utilisation du Http Simple Table Server
 ### Lecture de données de façon répartie et sans collision
-Certaines applications ne tolèrent pas que 2 utilisateurs se connectent avec le même login en même temps.<br/>
-Le STS peut facilement gérer le jeu de données de façon distribuée pour faire en sorte que les logins soient différents pour chaque virtual user.<br/>
+Certaines applications ne **tolèrent pas** que **2 utilisateurs** se connectent avec le **même login** en **même temps**.<br/>
+Il est souvent recommandé de ne pas utiliser les mêmes données pour 2 utilisateurs connectés avec le même login en même temps pour éviter des conflits sur les données utilisées<br/>
+
+Le STS peut facilement gérer le jeu de données de façon distribuée pour faire en sorte que les logins soient différents pour chaque virtual user à un instant T du test.<br/>
 
 Il faut un jeu de données avec les logins/password avec un nombre de lignes supérieur au nombre de threads actifs à un instant T.<br/>
 
@@ -76,6 +78,9 @@ Les consommateurs démarrent un peu plus tard afin qu’il y ait des données da
 Il faut également que les consommateurs ne consomment pas trop rapidement par rapport aux producteurs ou bien il faut gérer le cas où la liste ne contient plus de la valeur en détectant qu’il n’y a plus de valeur disponible et attendre quelques secondes avant de réitérer en boucle.
 
 Les consommateurs consomment les valeurs par la commande READ, FIRST, KEEP=FALSE.
+
+Un schéma pour expliquer les producteurs ADD et les consommateurs READ dans la même file d'attente.
+
 ![File ou Queue](../../doc/images/FR_file_producteur_consommateur.png)
 
 ### Producteur et consommateur avec recherche par FIND
@@ -127,6 +132,7 @@ Cette possibilité facilite les tests de performance mais aussi des tests de non
 
 
 ### Moyen centralisé d’arrêter proprement un tir
+#### Arret progressif du test sur tous les injecteurs JMeter
 Dans JMeter il n’existe pas la notion comme dans LoadRunner de « GradualExiting », c’est-à-dire d’indiquer au vuser à la fin de l’itération s’il doit continuer ou bien de pas réitérer et donc s’arrêter.
 
 On peut simuler ce « GradualExiting » avec le STS et un peu de code dans le script JMeter.<br/>
@@ -136,8 +142,9 @@ Si la valeur est égale à « STOP » alors le vuser s’arrête si la valeur es
 ![Gradual Exiting avec Etat](../../doc/images/FR_verif_etat_gradual_exiting.png)
 
 
+#### Arret progressif du test après une date heure fixe
 On peut également par ce système programmer la demande d’arrêt à une heure fixe.<br/>
-On indique en paramètre la date et l’heure pour modifier la valeur de l’état à STOP.<br/>
+On indique en paramètre la date et l’heure pour modifier la valeur de l’état à STOP par exemple 2024-07-31_14h30m45s.<br/>
 Par un script JMeter qui tourne en plus du tir en cours.
 
 Le script se lance, on calcule le nombre de milli secondes avant la date indiquée d’arrêt demandée.<br/>
@@ -185,6 +192,8 @@ Le STS a la possibilité de charger des fichiers en mémoire au démarrage du ST
 Le chargement des fichiers se fait quand le STS est lancé en application externe (&lt;JMETER_HOME&gt;\bin\simple-table-server.cmd ou &lt;JMETER_HOME&gt;/bin/simple-table-server.sh) et aussi quand JMeter est lancé en ligne de commande sans GUI ou via le JMeter Maven Plugin.
 
 Le chargement des fichiers ne se fait **pas** avec JMeter en mode **GUI**.
+
+Les fichiers sont lus dans le répertoire indiqué par la property : **jmeterPlugin.sts.datasetDirectory** et si cette property est nulle alors dans le répertoire &lt;JMETER_HOME&gt;/bin<br/>
 
 La déclaration des fichiers à charger se fait par les properties suivantes :<br/>
 jmeterPlugin.sts.initFileAtStartup=article.csv,nom_fichier.csv<br/>
@@ -254,9 +263,11 @@ La documentation est disponible sur le site Internet de jmeter plugin à l’URL
 http://jmeter-plugins.org/wiki/HttpSimpleTableServer
 
 ## Distributed architecture for JMeter
-The Simple Table Server runs on the JMeter controller (master) and load generators (slaves) make calls to the STS to get or add some data.<br/>
+The Simple Table Server runs on the JMeter controller (master) and load generators (slaves) or injectors make calls to the STS to get, find or add some data.<br/>
 At the beginning of the test, the first load generator will load data in memory (initial call) and at the end of the test it asks the STS saving values in a file.<br/>
 All the load generators ask data from the same STS which is started on the JMeter controller.<br/>
+
+The INITFILE can also be done at STS startup time (without the first load generator initial call)<br/>
 
 ![Architecture distribuée avec plusieurs nodes JMeter](../../doc/images/US_JMeter_archi_multi_load_generators.png)
 
@@ -286,6 +297,8 @@ login2;password2
 login3;password3
 login4;password4
 </pre>
+
+The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
 
 ### READ - Get one line from list
 http://hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv
@@ -392,7 +405,7 @@ dossier.csv = 1<br />
 ### SAVE - Save the specified linked list in a file to the datasetDirectory location
 http://hostname:port/sts/**SAVE**?FILENAME=logins.csv
 
-If jmeterPlugin.sts.addTimestamp is set to true then a timestamp will be added to the filename, the file is stored in jmeterPlugin.sts.datasetDirectory or if null in the JMETER_HOME/bin directory:<br/>
+If jmeterPlugin.sts.addTimestamp is set to true then a timestamp will be added to the filename, the file is stored in jmeterPlugin.sts.datasetDirectory or if null in the &lt;JMETER_HOME&gt;/bin directory:<br/>
 20240520T16h33m27s.logins.csv
 
 You can force the addTimestamp value with parameter ADD_TIMESTAMP in the url like :
@@ -445,7 +458,7 @@ databaseIsEmpty=false
 ```
 
 ### Error response, KO
-When the command and/or a parameter are wrongs, the result is a page html status 200 but the title contains the label KO.
+When the command and/or a parameter are wrongs, the result is a page html status 200 but the **title** contains the label **KO**.
 
 Examples :
 Send a unknown command, be careful Command a case sensitive (READ != read)

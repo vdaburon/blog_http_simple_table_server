@@ -16,12 +16,12 @@ This plugin takes over the features of the dedicated application for Tomcat ment
 # Manage the dataset with Http Simple Table Server (STS)
 ## Adding centralized management of the dataset
 
-Performance tests with JMeter can be done with several JMeter injectors (without interface, on a remote machine) and a JMeter controller (with user interface, on the local machine).
+Performance tests with JMeter can be done with several JMeter injectors or Load Generators (without interface, on a remote machine) and a JMeter controller (with user interface or command line interface on the local machine).
 
-JMeter scripts are sent by RMI protocol to injectors.<br/>
+JMeter script and properties are sent by RMI protocol to injectors.<br/>
 The results of the calls are returned periodically to the JMeter controller.
 
-However the dataset and csv files are not transferred from the controller to the injectors.<br/>
+However the dataset, csv files are not transferred from the controller to the injectors.<br/>
 
 ![Distributed architecture with multi load generators](../../doc/images/US_JMeter_archi_multi_load_generators.png)
 
@@ -34,7 +34,7 @@ The main idea is to use a small http server to manage the dataset files with sim
 
 This http server can be launched alone in an external program or in the JMeter tool.
 
-The Http server is called "Simple Table Server" or STS.
+The Http server is called "**S**imple **T**able **S**erver" or STS.
 
 The name STS is also a reference to the Virtual Table Server (VTS) program of LoadRunner with different functionalities, a different technical implementation but close in the use cases.
 
@@ -42,8 +42,10 @@ STS is very useful in a test with multiple JMeter injectors but it also brings *
 
 ## Some possibilities of using the Http Simple Table Server
 ### Reading data in a distributed and collision-free way
-Some applications do not tolerate that 2 users connect with the same login at the same time.<br/>
-The STS can easily manage the dataset in a distributed way to ensure that the logins are different for each virtual user.<br/>
+Some applications **do not tolerate** that **2 users** connect with the **same login** at the **same time**.<br/>
+
+It is often recommended not to use the same data for 2 users connected with the same login at the same time to avoid conflicts on the data used.<br/>
+The STS can easily manage the dataset in a distributed way to ensure that logins are different for each virtual user at a given time T of the test.<br/>
 
 A dataset with logins/passwords with a number of lines greater than the number of active threads at a given time is required.<br/>
 
@@ -61,7 +63,7 @@ Documents are awaiting validation by an administrator, when the documents are va
 
 To do this, we will read a data file in memory of the http STS and the virtual users will read by deleting the value at the top of the list.
 
-When the tet is stopped, we can save the values that remain in memory in a file (with or without a timestamp prefix) or let the http STS run for another test while keeping the values ​​still in memory.
+When the test is stopped, we can save the values that remain in memory in a file (with or without a timestamp prefix) or let the http STS run for another test while keeping the values still in memory.
 
 ![Single-use dataset consumption](../../doc/images/US_read_unique_value.png)
 
@@ -75,6 +77,8 @@ The consumers start a little later so that there is data in the queue.<br/>
 It is also necessary that the consumers do not consume too quickly compared to the producers or it is necessary to manage the case where the list no longer contains a value by detecting that there is no more value available and waiting a few seconds before repeating in a loop.
 
 The consumers consume the values by the command READ, FIRST, KEEP=FALSE.
+
+A schema to explains the produceurs ADD and consumers READ at the same queue. 
 
 ![Producers Consumers Queue](../../doc/images/US_queue_producers_consumers.png)
 
@@ -90,9 +94,9 @@ A user with rights limited to a geographical sector creates documents and adds a
 - login23;D12255
 
 Consumer:<br/>
-A user will modify the characteristics of the document but to do so he must choose from the list in memory only the lines with the same login as the one he currently uses for questions of rights and geographic sector.<br/>
+A user will modify the characteristics of the document but to do so he must choose from the list in memory **only the lines with the same login** as the one he currently uses for questions of rights and geographic sector.<br/>
 Search in the list with the FIND command and FIND_MODE=SUBSTRING and the string searched for is the login of the connected person (ex: login23) so LINE=**login23;** (with the separator ;).<br/>
-Thus the returned line will be the 1st line with login23 and the file number will be used in searching for files in the tested application.<br/>
+In this example, the returned line will be the 1st line with login23 and the file number will be used in searching for files in the tested application.<br/>
 Here the result of the FIND by substring (SUBSTRING) is: **login23;D12223** <br/>
 The line can be consumed with KEEP=FALSE or kept and placed at the end of the list with KEEP=TRUE
 
@@ -125,6 +129,7 @@ The software can add or read values by calling the url of the http STS and JMete
 This possibility facilitates performance tests but also non-regression tests.
 
 ### Centralized way to stop a shot properly
+#### Gradual Exiting the test on all JMeter injectors
 In JMeter there is no notion as in LoadRunner of "GradualExiting", that is to say to indicate to the vuser at the end of the iteration if it should continue or not to repeat and therefore stop.
 
 We can simulate this "GradualExiting" with the STS and a little code in the JMeter script.<br/>
@@ -133,13 +138,14 @@ If the value is equal to "STOP" then the vuser stops if the value is zero or dif
 
 ![Gradual Exiting with status](../../doc/images/US_verify_status_gradual_exiting.png)
 
-We can also program the stop request at a fixed time with this system.<br/>
-We indicate as a parameter the date and time to change the value of the status to STOP.<br/>
+#### Gradual Exiting after fixed date time
+We can also program the **stop** request after a **fixed time** with this system.<br/>
+We indicate as a parameter the date and time to change the value of the status to STOP, e.g: 2024-07-31_14h30m45s.<br/>
 By a JMeter script that runs in addition to the current shot.
 
 The script is launched, we calculate the number of milliseconds before the indicated date of requested stop.<br/>
 The vuser is put on hold for the calculated duration.<br/>
-Then the "status.csv" file in the STS is deleted to put the STOP value which will allow the 2nd JMeter script that is already running to recover the "STOP" value and to stop properly on all the JMeter injectors or the JMeter alone.
+Then the "status.csv" file in the STS is deleted to put the STOP value which will allow the 2nd JMeter script that is already running to read the status value, if status == "STOP" value and to stop properly on all the JMeter injectors or the JMeter alone.
 
 ![Stop at fixed time](../../doc/images/US_stop_fixed_time_status.png)
 
@@ -182,6 +188,8 @@ The STS has the ability to load files into memory at STS startup.<br/>
 Loading files is done when the STS is launched as an external application (&lt;JMETER_HOME&gt;\bin\simple-table-server.cmd or &lt;JMETER_HOME&gt;/bin/simple-table-server.sh) and also when JMeter is launched from the command line without GUI or via the JMeter Maven Plugin.
 
 Loading files is **not** done with JMeter in **GUI** mode.
+
+The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
 
 The declaration of the files to be loaded is done by the following properties:<br/>
 jmeterPlugin.sts.initFileAtStartup=article.csv,filename.csv<br/>
@@ -249,9 +257,11 @@ Documentation is available on the jmeter plugin website at URL:<br/>
 http://jmeter-plugins.org/wiki/HttpSimpleTableServer 
 
 ## Distributed architecture for JMeter 
-The Simple Table Server runs on the JMeter controller (master) and load generators (slaves) make calls to the STS to get or add some data.<br/> 
+The Simple Table Server runs on the JMeter controller (master) and load generators (slaves) or injectors make calls to the STS to get, find or add some data.<br/> 
 At the beginning of the test, the first load generator will load data in memory (initial call) and at the end of the test it asks the STS saving values in a file.<br/>
 All the load generators ask data from the same STS which is started on the JMeter controller.<br/>
+
+The INITFILE can also be done at STS startup time (without the first load generator initial call)<br/>
 
 ![Distributed architecture with multi load generators](../../doc/images/US_JMeter_archi_multi_load_generators.png)
 
@@ -280,6 +290,8 @@ login2;password2
 login3;password3
 login4;password4
 </pre>
+
+The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
 
 ### READ - Get one line from list
 http://hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv
@@ -439,7 +451,7 @@ databaseIsEmpty=false
 ```
 
 ### Error response, KO
-When the command and/or a parameter are wrongs, the result is a page html status 200 but the title contains the label KO.
+When the command and/or a parameter are wrongs, the result is a page html status 200 but the **title** contains the label **KO**.
 
 Examples :
 Send a unknown command, be careful Command a case sensitive (READ != read)
