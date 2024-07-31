@@ -235,7 +235,7 @@ Tous les fichiers de données doivent être dans le même charset s’ils contie
 
 Pour répondre en HTML aux différentes commandes en particulier READ, le charset qui se trouve dans le header de la réponse est indiqué par jmeterPlugin.sts.charsetEncodingHttpResponse.
 
-jmeterPlugin.sts.charsetEncodingHttpResponse=<charset> (Use UTF-8) in the http header add "Content-Type:text/html; charset=<charset>",<br/>
+jmeterPlugin.sts.charsetEncodingHttpResponse=<charset> (Use UTF-8) in the http header add "Content-Type:text/html; charset=&lt;charset&gt;",<br/>
 La valeur par défaut est la JMeter property : sampleresult.default.encoding
 
 
@@ -296,6 +296,7 @@ login1;password1
 login2;password2
 login3;password3
 login4;password4
+login5;password5
 </pre>
 
 The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
@@ -457,7 +458,7 @@ jmeterPlugin.sts.initFileAtStartupRegex=false
 databaseIsEmpty=false
 ```
 
-### Error response, KO
+### Error response KO
 When the command and/or a parameter are wrongs, the result is a page html status 200 but the **title** contains the label **KO**.
 
 Examples :
@@ -558,3 +559,10 @@ Extract pom.xml dedicated to Http Simple Table Server :
         </plugins>
 </build>
 ```
+
+## Liens
+
+Lien vers la documentation du site jmeter-plugins.org
+
+[https://jmeter-plugins.org/wiki/HttpSimpleTableServer/](https://jmeter-plugins.org/wiki/HttpSimpleTableServer/)
+

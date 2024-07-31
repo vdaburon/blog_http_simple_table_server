@@ -1,6 +1,6 @@
 # JMeter Plugin Http Simple Table Server (STS) in depth
 
-# From the need to the creation of the STS plugin
+# The need to the creation of the STS plugin
 
 ## From a web application in Tomcat
 The idea of having a server to manage the dataset was born during the performance tests of the income tax declaration application of the French Ministry of Public Finance in 2012.<br/>
@@ -78,7 +78,7 @@ It is also necessary that the consumers do not consume too quickly compared to t
 
 The consumers consume the values by the command READ, FIRST, KEEP=FALSE.
 
-A schema to explains the produceurs ADD and consumers READ at the same queue. 
+A schema to explains the producers ADD and consumers READ at the same queue. 
 
 ![Producers Consumers Queue](../../doc/images/US_queue_producers_consumers.png)
 
@@ -141,7 +141,7 @@ If the value is equal to "STOP" then the vuser stops if the value is zero or dif
 #### Gradual Exiting after fixed date time
 We can also program the **stop** request after a **fixed time** with this system.<br/>
 We indicate as a parameter the date and time to change the value of the status to STOP, e.g: 2024-07-31_14h30m45s.<br/>
-By a JMeter script that runs in addition to the current shot.
+By a JMeter script that runs in addition to the current load test.
 
 The script is launched, we calculate the number of milliseconds before the indicated date of requested stop.<br/>
 The vuser is put on hold for the calculated duration.<br/>
@@ -199,13 +199,13 @@ jmeterPlugin.sts.initFileAtStartup=.+?\.csv<br/>
 jmeterPlugin.sts.initFileAtStartupRegex=true<br/>
 
 When jmeterPlugin.sts.initFileAtStartupRegex=false then the property jmeterPlugin.sts.initFileAtStartup contains the list of files to be loaded with the comma character “,” as the file name separator.
-Ex:
+E.g:
 jmeterPlugin.sts.initFileAtStartup=article.csv,filename.csv<br/>
 The STS at startup will try to load (INITFILE) the files articles.csv then filename.csv
 
 When jmeterPlugin.sts.initFileAtStartupRegex=true then the property jmeterPlugin.sts.initFileAtStartup contains a regular expression that will be used to match the files in the directory of the property jmeterPlugin.sts.datasetDirectory.
 
-Ex :
+E.g:
 jmeterPlugin.sts.initFileAtStartup=.+?\.csv<br/>
 Loads into memory (INITFILE) all files with the extension ".csv"<br/>
 
@@ -232,7 +232,7 @@ All data files must be in the same charset if they contain non-ASCII characters.
 
 To respond in HTML to the different commands, especially READ, the charset found in the response header is indicated by jmeterPlugin.sts.charsetEncodingHttpResponse.
 
-jmeterPlugin.sts.charsetEncodingHttpResponse=<charset> (Use UTF-8) in the http header add "Content-Type:text/html; charset=<charset>",<br/>
+jmeterPlugin.sts.charsetEncodingHttpResponse=<charset> (Use UTF-8) in the http header add "Content-Type:text/html; charset=&lt;charset&gt;",<br/>
 The default value is the JMeter property: sampleresult.default.encoding
 The list of charsets is declared in the HTML page (take the java.io API column)<br/>
 &#35; For the name of the charset look at : https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html<br/>
@@ -289,6 +289,7 @@ login1;password1
 login2;password2
 login3;password3
 login4;password4
+login5;password5
 </pre>
 
 The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
@@ -550,3 +551,9 @@ Extract pom.xml dedicated to Http Simple Table Server :
         </plugins>
 </build>
 ```
+
+## Links
+
+Link to jmeter-plugins.org documentation
+
+[https://jmeter-plugins.org/wiki/HttpSimpleTableServer/](https://jmeter-plugins.org/wiki/HttpSimpleTableServer/)
