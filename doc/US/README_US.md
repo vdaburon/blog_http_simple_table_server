@@ -1,4 +1,4 @@
-# JMeter Plugin Http Simple Table Server in depth
+# JMeter Plugin Http Simple Table Server (STS) in depth
 
 # From the need to the creation of the STS plugin
 
@@ -275,7 +275,7 @@ login5;password5
 </pre>
 
 ### INITFILE - Load file in memory
-http://hostname:port/sts/**INITFILE**?FILENAME=logins.csv<br/>
+http&#58;//hostname:port/sts/**INITFILE**?FILENAME=logins.csv<br/>
 HTML format:
 ```HTML
 <html><title>OK</title>
@@ -294,7 +294,7 @@ login4;password4
 The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
 
 ### READ - Get one line from list
-http://hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv
+http&#58;//hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv
 HTML format:
 ```HTML
 <html><title>OK</title>
@@ -313,7 +313,7 @@ Avalables options:
 ### READMULTI - Get multi lines from list in one request
 
 GET Protocol
-http://hostname:port/sts/**READMULTI**?FILENAME=logins.csv&NB_LINES={Nb lines to read}&READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}
+http&#58;//hostname:port/sts/**READMULTI**?FILENAME=logins.csv&NB_LINES={Nb lines to read}&READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}
 
 Available options:
 - NB_LINES=Number of lines to read : 1 <= Nb lines (Integer) and Nb lines <= list size
@@ -347,7 +347,7 @@ http POST Request<br/>
 
 Method GET :<br/>
 GET Protocol<br/>
-http://hostname:port/sts/**ADD**?FILENAME=dossier.csv&LINE=D0001123&ADD_MODE={FIRST, LAST}
+httpv&#58;//hostname:port/sts/**ADD**?FILENAME=dossier.csv&LINE=D0001123&ADD_MODE={FIRST, LAST}
 
 ###	FIND – Find a line in the file (GET OR POST HTTP protocol)
 Command FIND <br/>
@@ -359,8 +359,8 @@ The LINE to find is for FIND_MODE :
 - KEEP=TRUE => the data is kept and put to the end of list
 - KEEP=FALSE => the data is removed
 
-GET Protoco:<br/>
-http://hostname:port/sts/**FIND**?FILENAME=colors.txt&LINE=(BLUE|RED)&[FIND_MODE=\[SUBSTRING,EQUALS,REGEX_FIND,REGEX_MATCH\]]&KEEP={TRUE, FALSE}
+GET Protocol:<br/>
+http&#58;//hostname:port/sts/**FIND**?FILENAME=colors.txt&LINE=(BLUE|RED)&[FIND_MODE=\[SUBSTRING,EQUALS,REGEX_FIND,REGEX_MATCH\]]&KEEP={TRUE, FALSE}
 
 If find return the first line finded, start reading at first line in the file (linked list)
 ```HTML
@@ -385,7 +385,7 @@ HTML format:
 ```
 
 ### STATUS - Display the list of loaded files and the number of remaining lines
-http://hostname:port/sts/**STATUS**<br/>
+http&#58;//hostname:port/sts/**STATUS**<br/>
 HTML format:
 ```HTML
 <html><title>OK</title>
@@ -396,13 +396,13 @@ dossier.csv = 1<br />
 </html>
 ``` 
 ### SAVE - Save the specified linked list in a file to the datasetDirectory location
-http://hostname:port/sts/**SAVE**?FILENAME=logins.csv
+http&#58;//hostname:port/sts/**SAVE**?FILENAME=logins.csv
 
 If jmeterPlugin.sts.addTimestamp is set to true then a timestamp will be added to the filename, the file is stored in jmeterPlugin.sts.datasetDirectory or if null in the JMETER_HOME/bin directory:<br/>
 20240520T16h33m27s.logins.csv
 
 You can force the addTimestamp value with parameter ADD_TIMESTAMP in the url like :
-http://hostname:port/sts/SAVE?FILENAME=logins.csv&**ADD_TIMESTAMP**={true,false}
+http&#58;//hostname:port/sts/SAVE?FILENAME=logins.csv&**ADD_TIMESTAMP**={true,false}
 
 HTML format:
 ```HTML
@@ -412,7 +412,7 @@ HTML format:
 ```
 
 ### RESET - Remove all elements from the specified list:
-http://hostname:port/sts/**RESET**?FILENAME=logins.csv
+http&#58;//hostname:port/sts/**RESET**?FILENAME=logins.csv
 
 HTML format:
 ```HTML
@@ -426,13 +426,13 @@ Always returns OK even if the file did not exist
 
 
 ### STOP - Shutdown the Simple Table Server:
-http://hostname:port/sts/**STOP**
+http&#58;//hostname:port/sts/**STOP**
 
 The stop command is used usually when the HTTP STS server was launched by a script shell and we want to stop the STS at the end of the test.<br/>
 When the jmeterPlugin.sts.daemon=true, you need to call http://hostname:port/sts/STOP or kill the process to stop the STS
 
 ### CONFIG – Display STS configuration
-http://hostname:port/sts/**CONFIG**<br/>
+http&#58;//hostname:port/sts/**CONFIG**<br/>
 Display the STS configuration<br/>
 E.g :
 ```
