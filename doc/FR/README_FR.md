@@ -301,7 +301,7 @@ login4;password4
 The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
 
 ### READ - Get one line from list
-http&#58;//hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv
+http&#58;//hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv<br/>
 HTML format:
 ```HTML
 <html><title>OK</title>
@@ -369,22 +369,22 @@ The LINE to find is for FIND_MODE :
 GET Protocol:<br/>
 http&#58;//hostname:port/sts/**FIND**?FILENAME=colors.txt&LINE=(BLUE|RED)&[FIND_MODE=\[SUBSTRING,EQUALS,REGEX_FIND,REGEX_MATCH\]]&KEEP={TRUE, FALSE}
 
-If find return the first line finded, start reading at first line in the file (linked list)
+If find return the first line finded, start reading at first line in the file (linked list)<br/>
 ```HTML
 <html><title>OK</title>
 <body>RED</body>
 </html> 
 ```
 
-If NOT find return title KO and message "Error : Not find !" in the body
+If NOT find return title KO and message "Error : Not find !" in the body<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Not find !</body>
 </html> 
 ```
 ### LENGTH - Return the number of remaining lines of a linked list
-http&#58;//hostname:port/sts/**LENGTH**?FILENAME=logins.csv
-HTML format:
+http&#58;//hostname:port/sts/**LENGTH**?FILENAME=logins.csv<br/>
+HTML format:<br/>
 ```HTML
 <html><title>OK</title>
 <body>5</body> => remaining lines
@@ -393,7 +393,7 @@ HTML format:
 
 ### STATUS - Display the list of loaded files and the number of remaining lines
 http&#58;//hostname:port/sts/**STATUS**<br/>
-HTML format:
+HTML format:<br/>
 ```HTML
 <html><title>OK</title>
 <body>
@@ -411,7 +411,7 @@ If jmeterPlugin.sts.addTimestamp is set to true then a timestamp will be added t
 You can force the addTimestamp value with parameter ADD_TIMESTAMP in the url like :
 http&#58;//hostname:port/sts/SAVE?FILENAME=logins.csv&**ADD_TIMESTAMP**={true,false}
 
-HTML format:
+HTML format:<br/>
 ```HTML
 <html><title>OK</title>
 <body>5</body> => number of lines saved
@@ -421,7 +421,7 @@ HTML format:
 ### RESET - Remove all elements from the specified list:
 http&#58;//hostname:port/sts/**RESET**?FILENAME=logins.csv
 
-HTML format:
+HTML format:<br/>
 ```HTML
 <html><title>OK</title>
 <body></body>
@@ -461,42 +461,42 @@ databaseIsEmpty=false
 When the command and/or a parameter are wrongs, the result is a page html status 200 but the **title** contains the label **KO**.
 
 Examples :
-Send a unknown command, be careful Command a case sensitive (READ != read)
+Send a unknown command, be careful Command a case sensitive (READ != read)<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : unknown command !</body>
 </html>
 ```
 
-Try to read value from a file not yet load with INITFILE
+Try to read value from a file not yet load with INITFILE<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : logins.csv not loaded yet !</body>
 </html>
 ```
 
-Try to read value from a file but no more line in the Linked List
+Try to read value from a file but no more line in the Linked List<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : No more line !</body>
 </html>
 ```
 
-Try to save lines in a file what contains illegal character like “..”, “:”
+Try to save lines in a file what contains illegal character like “..”, “:”<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Illegal character found !</body>
 </html>
 ```
 
-Command FIND
+Command FIND<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Not find !</body>
 </html>
 ```
 
-Command FIND and FIND_MODE=REGEX_FIND or REGEX_MATCH
+Command FIND and FIND_MODE=REGEX_FIND or REGEX_MATCH<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Regex compile error !</body>

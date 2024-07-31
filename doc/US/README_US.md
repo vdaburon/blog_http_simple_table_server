@@ -294,7 +294,7 @@ login4;password4
 The files are read in the directory indicated by the property: **jmeterPlugin.sts.datasetDirectory** and if this property is null then in the directory &lt;JMETER_HOME&gt;/bin<br/>
 
 ### READ - Get one line from list
-http&#58;//hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv
+http&#58;//hostname:port/sts/**READ**?READ_MODE={FIRST, LAST, RANDOM}&KEEP={TRUE, FALSE}&FILENAME=logins.csv<br/>
 HTML format:
 ```HTML
 <html><title>OK</title>
@@ -376,7 +376,7 @@ If NOT find return title KO and message "Error : Not find !" in the body
 </html> 
 ```
 ### LENGTH - Return the number of remaining lines of a linked list
-http://hostname:port/sts/**LENGTH**?FILENAME=logins.csv
+http://hostname:port/sts/**LENGTH**?FILENAME=logins.csv<br/>
 HTML format:
 ```HTML
 <html><title>OK</title>
@@ -424,7 +424,6 @@ Reset Command is often used in the “setUp Thread Group” to clear the values 
 
 Always returns OK even if the file did not exist
 
-
 ### STOP - Shutdown the Simple Table Server:
 http&#58;//hostname:port/sts/**STOP**
 
@@ -454,42 +453,42 @@ databaseIsEmpty=false
 When the command and/or a parameter are wrongs, the result is a page html status 200 but the **title** contains the label **KO**.
 
 Examples :
-Send a unknown command, be careful Command a case sensitive (READ != read)
+Send a unknown command, be careful Command a case sensitive (READ != read)<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : unknown command !</body>
 </html>
 ```
 
-Try to read value from a file not yet load with INITFILE
+Try to read value from a file not yet load with INITFILE<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : logins.csv not loaded yet !</body>
 </html>
 ```
 
-Try to read value from a file but no more line in the Linked List
+Try to read value from a file but no more line in the Linked List<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : No more line !</body>
 </html>
 ```
 
-Try to save lines in a file what contains illegal character like “..”, “:”
+Try to save lines in a file what contains illegal character like “..”, “:”<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Illegal character found !</body>
 </html>
 ```
 
-Command FIND
+Command FIND<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Not find !</body>
 </html>
 ```
 
-Command FIND and FIND_MODE=REGEX_FIND or REGEX_MATCH
+Command FIND and FIND_MODE=REGEX_FIND or REGEX_MATCH<br/>
 ```HTML
 <html><title>KO</title>
 <body>Error : Regex compile error !</body>
