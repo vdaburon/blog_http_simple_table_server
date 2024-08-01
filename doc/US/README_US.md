@@ -1,10 +1,10 @@
 # JMeter Plugin Http Simple Table Server (STS) in depth
 
-# The need to the creation of the STS plugin
+# The need to the creation of the Simple Table Server plugin
 
 ## From a web application in Tomcat
 The idea of having a server to manage the dataset was born during the performance tests of the income tax declaration application of the French Ministry of Public Finance in 2012.<br/>
-The dataset consisted of millions of lines to simulate tens of thousands of people who filled out their income tax return form per hour and there were a dozen injectors to distribute the injection load of a performance shot.<br/>
+The dataset consisted of millions of lines to simulate tens of thousands of people who filled out their income tax return form per hour and there were a dozen injectors to distribute the injection load of a performance load test.<br/>
 The dataset was consumed, that is to say that once the line with the person's information was read or consumed, we could no longer take the person's information again.<br/>
 The management of the dataset in a centralized way had been implemented with a Java web application (war) running in a Tomcat. <br/>
 Injectors requesting a row of the dataset from the web application.<br/>
@@ -100,8 +100,8 @@ In this example, the returned line will be the 1st line with login23 and the fil
 Here the result of the FIND by substring (SUBSTRING) is: **login23;D12223** <br/>
 The line can be consumed with KEEP=FALSE or kept and placed at the end of the list with KEEP=TRUE
 
-### Enrich the dataset as the shot progresses
-The idea is to start with a reduced dataset that is read at the start of the shot and to add new lines to the initial dataset as the shot progresses in order to increase or enrich the dataset. The dataset is therefore larger at the end of the shot than at the beginning. At the end of the shot, the enriched dataset can be saved with the SAVE command and the new file can be the future input file for a new shot. <br/>
+### Enrich the dataset as the load test progresses
+The idea is to start with a reduced dataset that is read at the start of the load test and to add new lines to the initial dataset as the load test progresses in order to increase or enrich the dataset. The dataset is therefore larger at the end of the load test than at the beginning. At the end of the load test, the enriched dataset can be saved with the SAVE command and the new file can be the future input file for a new load test. <br/>
 For example, we add people by a scenario and we add to the search dataset these people in the list so the search is done on the first people of the file read at the beginning but also the people added as the performance test progresses.
 
 ### Verification of the dataset
@@ -128,7 +128,7 @@ The software can add or read values by calling the url of the http STS and JMete
 
 This possibility facilitates performance tests but also non-regression tests.
 
-### Centralized way to stop a shot properly
+### Centralized way to stop a load test properly
 #### Gradual Exiting the test on all JMeter injectors
 In JMeter there is no notion as in LoadRunner of "GradualExiting", that is to say to indicate to the vuser at the end of the iteration if it should continue or not to repeat and therefore stop.
 
