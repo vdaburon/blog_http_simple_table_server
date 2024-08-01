@@ -27,10 +27,10 @@ However the dataset, csv files are not transferred from the controller to the in
 
 It is not possible natively with JMeter to read the dataset randomly or in reverse order. However, there are several external plugins that allow you to randomly read a data file but not in a centralized way.
 
-It is not possible natively to save data created during tests such as file numbers or new documents in a file.<br/>
+It is not possible natively to save data created during tests such as document numbers or new documents in a file.<br/>
 The possibility of saving values can be done with Groovy script in JMeter but not in a centralized way if you use several injectors during the performance test.
 
-The main idea is to use a small http server to manage the dataset files with simple commands to retrieve or add data lines to the data files.
+The main idea is to use a small http server to manage the dataset files with simple commands to retrieve, find or add data lines to the data files.
 
 This http server can be launched alone in an external program or in the JMeter tool.
 
@@ -134,7 +134,7 @@ In JMeter there is no notion as in LoadRunner of "GradualExiting", that is to sa
 
 We can simulate this "GradualExiting" with the STS and a little code in the JMeter script.<br/>
 With the STS we can load a file "status.csv" which contains a line with a particular value like the line "RUN", the vuser asks at the beginning of the iteration the value of the line of the file "status.csv".<br/>
-If the value is equal to "STOP" then the vuser stops if the value is zero or different from STOP like "RUN" then the vuser.
+If the value is equal to "STOP" then the vuser stops if the value is zero or different from STOP like "RUN" then the vuser continue iteration.
 
 ![Gradual Exiting with status](../../doc/images/US_verify_status_gradual_exiting.png)
 
@@ -399,7 +399,7 @@ dossier.csv = 1<br />
 ### SAVE - Save the specified linked list in a file to the datasetDirectory location
 http&#58;//hostname:port/sts/**SAVE**?FILENAME=logins.csv
 
-If jmeterPlugin.sts.addTimestamp is set to true then a timestamp will be added to the filename, the file is stored in jmeterPlugin.sts.datasetDirectory or if null in the JMETER_HOME/bin directory:<br/>
+If jmeterPlugin.sts.addTimestamp is set to true then a timestamp will be added to the filename, the file is stored in jmeterPlugin.sts.datasetDirectory or if null in the &lt;JMETER_HOME&gt;/bin directory:<br/>
 20240520T16h33m27s.logins.csv
 
 You can force the addTimestamp value with parameter ADD_TIMESTAMP in the url like :
@@ -450,7 +450,7 @@ jmeterPlugin.sts.initFileAtStartupRegex=false
 databaseIsEmpty=false
 ```
 
-### Error response, KO
+### Error response KO
 When the command and/or a parameter are wrongs, the result is a page html status 200 but the **title** contains the label **KO**.
 
 Examples :
@@ -520,7 +520,7 @@ For this :<br/>
 If you want to use the Http Simple Server with the JMeter Maven plugin, you could:<br/>
 - Put your csv files in &lt;project&gt;/src/test/jmeter directory (e.g : logins.csv)
 - Put the simple-table-server.groovy (groovy script) in &lt;project&gt;/src/test/jmeter directory
-- Put the your jmeter script in &gt;project&gt;/src/test/jmeter directory (e.g : test_login.jmx)
+- Put the your jmeter script in &lt;project&gt;/src/test/jmeter directory (e.g : test_login.jmx)
 - Declare in the maven build section, in the configuration &gt; jmeterExtensions &gt; declare the artifact kg.apc:jmeter-plugins-table-server:&lt;version&gt;
 - Declare user properties for STS configuration and automatic start
 - If you use a localhost and a proxy configuration, you could add a proxy configuration with &lt;hostExclusions&gt;localhost&lt;/hostExclusions&gt;
