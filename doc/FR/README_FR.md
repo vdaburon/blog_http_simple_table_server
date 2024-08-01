@@ -528,7 +528,7 @@ Pour cela :<br/>
 If you want to use the Http Simple Server with the JMeter Maven plugin, you could:<br/>
 - Put your csv files in &lt;project&gt;/src/test/jmeter directory (e.g : logins.csv)
 - Put the simple-table-server.groovy (groovy script) in &lt;project&gt;/src/test/jmeter directory
-- Put the your jmeter script in &gt;project&gt;/src/test/jmeter directory (e.g : test_login.jmx)
+- Put the your jmeter script in &lt;project&gt;/src/test/jmeter directory (e.g : test_login.jmx)
 - Declare in the maven build section, in the configuration &gt; jmeterExtensions &gt; declare the artifact kg.apc:jmeter-plugins-table-server:&lt;version&gt;
 - Declare user properties for STS configuration and automatic start
 - If you use a localhost and a proxy configuration, you could add a proxy configuration with &lt;hostExclusions&gt;localhost&lt;/hostExclusions&gt;
