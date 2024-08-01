@@ -236,9 +236,7 @@ Tous les fichiers de données doivent être dans le même charset s’ils contie
 Pour répondre en HTML aux différentes commandes en particulier READ, le charset qui se trouve dans le header de la réponse est indiqué par jmeterPlugin.sts.charsetEncodingHttpResponse.
 
 jmeterPlugin.sts.charsetEncodingHttpResponse=<charset> (Use UTF-8) in the http header add "Content-Type:text/html; charset=&lt;charset&gt;",<br/>
-La valeur par défaut est la JMeter property : sampleresult.default.encoding
-
-
+La valeur par défaut est la JMeter property : sampleresult.default.encoding<br/>
 La liste des charsets est déclarée dans la page HTML (prendre la colonne java.io API)<br/>
 &#35; For the name of the charset look at : https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html<br/>
 &#35; Colum Canonical Name for java.io API and java.lang API
