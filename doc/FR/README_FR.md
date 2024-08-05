@@ -213,7 +213,7 @@ Ex :
 jmeterPlugin.sts.initFileAtStartup=.+?\.csv<br/>
 Charge en mémoire (INITFILE) tous les fichiers dont l’extension est « .csv »<br/>
 
-Le nom du fichier ne doit pas contenir des caractères spéciaux qui permettraient de changer le répertoire de lecture comme ..\..\fichier.csv ou /etc/passwd ou ../../../tomcat/conf/server.xml
+Le nom du fichier ne doit pas contenir des caractères spéciaux qui permettraient de changer le répertoire de lecture comme ..\\..\fichier.csv ou /etc/passwd ou ../../../tomcat/conf/server.xml
 
 La taille maximum du nom d’un fichier est de 128 caractères (sans prendre en compte la taille du nom du répertoire).
 
