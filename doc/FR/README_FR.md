@@ -148,8 +148,8 @@ On indique en paramètre la date et l’heure pour modifier la valeur de l’ét
 Par un script JMeter qui tourne en plus du tir en cours.
 
 Le script se lance, on calcule le nombre de milli secondes avant la date indiquée d’arrêt demandée.<br/>
-Le vuser est mise en attente sur le durée calculée.<br/>
-Puis le fichier « etat.csv » dans le STS est effacé pour mettre la valeur STOP qui va permettre au 2ème script JMeter qui tourne déjà de récupérer la valeur « STOP » et de s’arrêter proprement sur l’ensemble des injecteurs JMeter ou du JMeter seul.
+Le vuser est mise en attente sur la durée calculée.<br/>
+A l'heure fixe d'arrêt demandée, le vuser sort de la mise en attente et le fichier « etat.csv » dans le STS est effacé pour ajouter la valeur STOP qui va permettre au 2ème script JMeter qui tourne déjà de récupérer la valeur « STOP » et de s’arrêter proprement sur l’ensemble des injecteurs JMeter ou du JMeter seul.
 
 ![Stop à heure fixe](../../doc/images/FR_stop_heure_verif_etat.png)
 
@@ -167,7 +167,7 @@ Par défaut, le répertoire contenant les fichiers est &lt;JMETER_HOME&gt;/bin
 ### Démarrer en ligne de commande.
 Il est possible de démarrer le serveur STS en ligne de commande.<br/>
 &lt;JMETER_HOME&gt;\bin\simple-table-server.cmd (Windows OS)<br/>
-&lt;JMETER_HOME&gt;>/bin/simple-table-server.sh (Linux OS)
+&lt;JMETER_HOME&gt;/bin/simple-table-server.sh (Linux OS)
 
 ou automatiquement lors du démarrage de JMeter en ligne de commande (CLI) en déclarant le fichier ces 2 lignes dans jmeter.properties<br/>
 jsr223.init.file=simple-table-server.groovy<br/>
@@ -184,11 +184,11 @@ La property jmeterPlugin.sts.daemon=true est utilisée quand le STS est lancé e
 Dans ce cas le STS n’écoute pas le clavier la touche &lt;ENTER&gt; pour quitter.<br/>
 Le STS rentre en boucle infinie, il faut appeler la commande /sts/STOP pour arrêter le STS ou bien le killer.<br/>
 
-Quand jmeterPlugin.sts.daemon=false le STS attend la saisie de &lt;ENTER&gt; pour quitter, c’est le mode par défaut.<br/>
+Quand jmeterPlugin.sts.daemon=false le STS attend la saisie de la touche &lt;ENTER&gt; pour quitter, c’est le mode par défaut.<br/>
 jmeterPlugin.sts.daemon=false
 
 ## Chargement de fichiers au démarrage du Simple Table Server
-Le STS a la possibilité de charger des fichiers en mémoire au démarrage du STS.<br/>
+Le STS a la possibilité de charger des fichiers de données en mémoire au démarrage du STS.<br/>
 Le chargement des fichiers se fait quand le STS est lancé en application externe (&lt;JMETER_HOME&gt;\bin\simple-table-server.cmd ou &lt;JMETER_HOME&gt;/bin/simple-table-server.sh) et aussi quand JMeter est lancé en ligne de commande sans GUI ou via le JMeter Maven Plugin.
 
 Le chargement des fichiers ne se fait **pas** avec JMeter en mode **GUI**.
@@ -202,8 +202,8 @@ ou<br/>
 jmeterPlugin.sts.initFileAtStartup=.+?\.csv<br/>
 jmeterPlugin.sts.initFileAtStartupRegex=true<br/>
 
-Quand jmeterPlugin.sts.initFileAtStartupRegex=false alors la property jmeterPlugin.sts.initFileAtStartup contient la liste de fichiers à charger avec comme séparateur des noms de fichier le caractère virgule « , ».
-Ex :
+Quand jmeterPlugin.sts.initFileAtStartupRegex=false alors la property jmeterPlugin.sts.initFileAtStartup contient la liste de fichiers à charger avec comme séparateur des noms de fichier le caractère virgule « , ».<br/>
+Ex : <br/>
 jmeterPlugin.sts.initFileAtStartup=article.csv,nom_fichier.csv<br/>
 Le STS au démarrage va tenter de charger (INITFILE) les fichiers articles.csv puis nom_fichiers.csv
 
@@ -215,7 +215,7 @@ Charge en mémoire (INITFILE) tous les fichiers dont l’extension est « .csv �
 
 Le nom du fichier ne doit pas contenir des caractères spéciaux qui permettraient de changer le répertoire de lecture comme ..\..\fichier.csv ou /etc/passwd ou ../../../tomcat/conf/server.xml
 
-La taille maximum du nom d’un fichier est de 128 caractères (sans prendre en compte le chemin du répertoire).
+La taille maximum du nom d’un fichier est de 128 caractères (sans prendre en compte la taille du nom du répertoire).
 
 ## Gestion de l’encodage des fichiers à lire/écrire et de la réponse html
 Il est possible de définir l’encodage à la lecture des fichiers ou à l’écriture des fichiers de données.<br/>
@@ -343,7 +343,7 @@ Available options:
 - ADD_MODE=FIRST => add to the begin of the list
 - ADD_MODE=LAST => add to the end of the list
 - FILENAME=dossier.csv => if doesn't already exist it creates a LinkList in memory
-- LINE=1234;98763 => the line to add
+- LINE=D0001123 => the line to add
 - UNIQUE => do not add line if the list already contains such line (return KO)
 
 
